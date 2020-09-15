@@ -1,0 +1,75 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Main'
+  ClientHeight = 528
+  ClientWidth = 742
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnResize = FormResize
+  DesignerMasterStyle = 0
+  object Memo1: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = [Link]
+    Position.X = 16.000000000000000000
+    Position.Y = 48.000000000000000000
+    Size.Width = 609.000000000000000000
+    Size.Height = 433.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 609.000000000000000000
+    Viewport.Height = 433.000000000000000000
+  end
+  object Edit1: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 1
+    Text = 'https://'
+    Position.X = 16.000000000000000000
+    Position.Y = 16.000000000000000000
+    Size.Width = 609.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Button1: TButton
+    Position.X = 640.000000000000000000
+    Position.Y = 16.000000000000000000
+    Size.Width = 80.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Go'
+    OnClick = Button1Click
+  end
+  object Edit2: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 3
+    Position.X = 16.000000000000000000
+    Position.Y = 488.000000000000000000
+    Size.Width = 609.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Button2: TButton
+    Position.X = 640.000000000000000000
+    Position.Y = 56.000000000000000000
+    TabOrder = 4
+    Text = 'Text'
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Position.X = 640.000000000000000000
+    Position.Y = 96.000000000000000000
+    TabOrder = 5
+    Text = 'Newsticker'
+    OnClick = Button3Click
+  end
+  object Button4: TButton
+    Position.X = 640.000000000000000000
+    Position.Y = 128.000000000000000000
+    TabOrder = 6
+    Text = 'Button4'
+    OnClick = Button4Click
+  end
+end
