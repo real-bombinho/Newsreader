@@ -1,0 +1,47 @@
+object Form2: TForm2
+  Left = 0
+  Top = 0
+  Caption = 'Newsticker'
+  ClientHeight = 480
+  ClientWidth = 813
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object Rectangle1: TRectangle
+    Size.Width = 785.000000000000000000
+    Size.Height = 457.000000000000000000
+    Size.PlatformDefault = False
+    OnMouseWheel = Rectangle1MouseWheel
+    object Label1: TLabel
+      StyledSettings = [Family, FontColor]
+      Hint = 'https://www.golem.de/ticker/'
+      HitTest = True
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 377.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 20.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = 'Website'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      OnClick = Label1Click
+    end
+  end
+  object ScrollBar1: TScrollBar
+    Align = FitRight
+    SmallChange = 0.000000000000000000
+    Orientation = Vertical
+    Position.X = 792.000000000000000000
+    Size.Width = 21.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    OnChange = ScrollBar1Change
+  end
+end

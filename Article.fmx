@@ -1,0 +1,42 @@
+object Form3: TForm3
+  Left = 0
+  Top = 0
+  Caption = 'News articles'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnResize = FormResize
+  DesignerMasterStyle = 0
+  object ScrollBar1: TScrollBar
+    Align = Right
+    SmallChange = 0.000000000000000000
+    Orientation = Vertical
+    Position.X = 622.000000000000000000
+    Size.Width = 18.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    OnChange = ScrollBar1Change
+  end
+  object Rectangle1: TRectangle
+    Size.Width = 617.000000000000000000
+    Size.Height = 473.000000000000000000
+    Size.PlatformDefault = False
+    OnMouseWheel = Rectangle1MouseWheel
+    object Label1: TLabel
+      StyledSettings = [Family, FontColor]
+      Position.X = 16.000000000000000000
+      Position.Y = 16.000000000000000000
+      Size.Width = 593.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = 'Title'
+      TabOrder = 0
+    end
+  end
+end
