@@ -5,12 +5,28 @@ interface
 uses System.SysUtils, System.DateUtils;
 
 const
-  SiteName = ''; // Put site name here i.e. 'Website.com'
+  SiteName = ''; // Put site name here i.e. 'website.com'
   WebSiteURL = 'https://www.' + SiteName + '/';
   WebSiteUserAgent = 'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1;' +
     ' Trident/4.0; FDM; MSIECrawler; Media Center PC 5.0)';
   Agents = 174;
+  TOR_Port = 9150;       // use TOR browser API , browser needs to be started
+  localLoop = '127.0.0.1';
+  TORdefault = true;
+  IPCheck = 'http://httpbin.org/ip';
+
 type
+
+  RLink = record
+  private
+    FTarget: string;
+    FDescription: string;
+    FRawText: string;
+    procedure setText(const Value: string);
+    procedure clear;
+  public
+    property RawText: string read FRawText write setText;
+  end;
 
   TWebSite = class
   private
@@ -22,45 +38,105 @@ type
     FUser: AnsiString;
     FURL: string;
     FPassword: AnsiString;
+    FUseTor: boolean;
     bs : array [0..Agents] of string;
-
     function fetch(const url: string): boolean;
     function getLastResponse: String;
     procedure FillUserAgents;
     function getLastUserAgent: string;
     function getTicker: string;
+    function getForum: string;
+    procedure setTor(const Value: boolean);
   public
+    property UseTOR: boolean read FUseTor write setTor;
     property LastResponse: String read getLastResponse;
     property ResponseCode: integer read FLastResponseCode;
     property URL: string read FURL write FURL;
     property User: AnsiString write FUser;
     property Ticker: string read getTicker;
+    property Forum: string read getForum;
     property Password: AnsiString write FPassword;
     property LastUserAgent: string read getLastUserAgent;
     constructor Create(const user: String; const password: string); overload;
     procedure Refresh;
+    function TORavailable: string;
   end;
 
-  function RemoveUmlaute(const value: string): string;
+  function RemoveUmlaute(const Source: string; doTrim: boolean = false): string;
   function LocateString(const Source, From, Till: string; start: integer = 1): string;
+  function FindTag(var source: string; const tag: string; Offset: integer; const remove: boolean = false): string;
 
 implementation
-uses IdHTTP, IdSSLOpenSSL,IdCompressorZLib;
+uses IdHTTP, IdSSLOpenSSL,IdCompressorZLib, IdIOHandlerStack, IdSocks, windows;
 
 const WaitIfFailed = 5;
       CacheTime = 10;
 
-function RemoveUmlaute(const value: string): string ;
+function RemoveUmlaute(const Source: string; doTrim: boolean = false): string ;
 var s: string;
 begin
-        s := stringReplace(Value, '&Auml;', 'Ae', [rfReplaceAll]);
-        s := stringReplace(Value, '&auml;', 'ae', [rfReplaceAll]);
-        s := stringReplace(s, '&ouml;', 'oe', [rfReplaceAll, rfIgnoreCase]);
-        s := stringReplace(s, '&uuml;', 'ue', [rfReplaceAll]);
-        s := stringReplace(s, '&Uuml;', 'Ue', [rfReplaceAll]);
-        s := stringReplace(s, '&quot;', '"', [rfReplaceAll, rfIgnoreCase]);
-        s := stringReplace(s, '&szlig;', 'ss', [rfReplaceAll, rfIgnoreCase]);
-        result := s;
+  s := stringReplace(Source, '&Auml;', 'Ae', [rfReplaceAll]);
+  s := stringReplace(s, '&auml;', 'ae', [rfReplaceAll]);
+  s := stringReplace(s, '&ouml;', 'oe', [rfReplaceAll]);
+  s := stringReplace(s, '&Ouml;', 'Oe', [rfReplaceAll]);
+  s := stringReplace(s, '&uuml;', 'ue', [rfReplaceAll]);
+  s := stringReplace(s, '&Uuml;', 'Ue', [rfReplaceAll]);
+  s := stringReplace(s, '&quot;', '"', [rfReplaceAll, rfIgnoreCase]);
+  s := stringReplace(s, '&szlig;', 'ss', [rfReplaceAll, rfIgnoreCase]);
+  s := stringReplace(s, '&raquo;', '»', [rfReplaceAll, rfIgnoreCase]);
+  s := stringReplace(s, '&laquo;', '«', [rfReplaceAll, rfIgnoreCase]);
+  s := stringReplace(s, '&oacute;', 'ó', [rfReplaceAll, rfIgnoreCase]);
+  s := stringReplace(s, '&amp;', '&&', [rfReplaceAll, rfIgnoreCase]);
+  if doTrim then s := trim(s);
+  result := s;
+end;
+
+function findTag(var source: string; const tag: String; Offset: integer; const remove: boolean = false): string;
+var f, t, et: integer;
+
+  function pos_CaseInsensitive(const SubStr: string; const Str: string;
+    Offset: integer = 1): integer; // assumes first character is not alphabetic
+  var f: integer;
+      s: string;
+      eos: integer;
+  begin
+    result := 0;
+    f := Offset;
+    eos := length(Str);
+    repeat
+      f := pos(SubStr[1], Str, f);
+      s := lowercase(copy(Str, f, length(SubStr)));
+      if lowercase(SubStr) = s then
+      begin
+        result := f;
+        f := -1;
+      end;
+      inc(f);
+    until (f = 0) or (f > eos);
+  end;
+
+begin
+  f := pos_CaseInsensitive('<' + tag, source, Offset);
+  if f <> 0 then
+  begin
+    t := pos('>', source, f + 1);
+    et := pos('/>', source, f + 1);
+    if (et < t) and (et <> 0) then
+    begin
+      result := copy(source, f, et + 1 - f);
+      if remove then delete(source, f, et + 1 - f);
+    end
+    else
+    begin
+      t := pos_CaseInsensitive('</' + tag, source, t + 1);
+      t := pos('>', source, t + 2);
+      result := copy(source, f, t - f);
+      if remove then
+        delete(source, f, t - f);
+    end;
+  end
+  else
+    result := '';
 end;
 
 function LocateString(const Source, From, Till: string; start: integer = 1): string;
@@ -69,9 +145,10 @@ var s: AnsiString;
 begin
   s := AnsiString(Source);
   result := '';
-  f := pos(From, s, start) + Length(From);
+  f := pos(From, s, start);
   if (f <> 0) then
   begin
+    f := f + Length(From);
     t := pos(Till, s, f + 1);
     if t <> 0 then
     begin
@@ -84,6 +161,7 @@ constructor TWebSite.Create(const user: String; const password: string);
 begin
   inherited Create;
   FUser := user;
+  FUseTor := TORdefault;
   FURL := WebSiteURL;
   FPassword := password;
   FLastResponse := '';
@@ -97,12 +175,17 @@ end;
 // fetches API, if previously unsuccessful, it will fail further attempts for
 //   [const WaitIfFailed] minutes and ResponseCode will be -1.
 //
+//    uses TOR browser on port
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 function TWebSite.fetch(const url: string): boolean;
 var Id_HandlerSocket : TIdSSLIOHandlerSocketOpenSSL;
     IdHTTP1: TIdHTTP;
     s: string;
+    Tor_IO_Handler: TIdIOHandlerStack;
+    IdSocksInfo: TIdSocksInfo;
+
 begin
   result := false;
   if FLastUnsuccessful <> 0 then
@@ -112,13 +195,26 @@ begin
       exit;
     end;
   IdHTTP1 := TIdHTTP.Create(nil);
+  if FUseTor then
+  begin
+    IdSocksInfo := TIdSocksInfo.Create(nil);
+  end;
   IdHTTP1.Compressor := TIdCompressorZLib.Create(nil);
   Id_HandlerSocket := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   try
+    if FUseTor then
+    begin
+      IdSocksInfo.Authentication := saNoAuthentication;
+      IdSocksInfo.Host := localLoop;
+      IdSocksInfo.Port := TOR_Port;
+      IdSocksInfo.Version := svSocks5;
+    end;
     Id_HandlerSocket.DefaultPort := 443;
     Id_HandlerSocket.SSLOptions.Mode := sslmClient;
     Id_HandlerSocket.SSLOptions.Method := sslvTLSv1_2;
     Id_HandlerSocket.SSLOptions.SSLVersions := [sslvTLSv1_2];
+    if FUseTor then
+      Id_HandlerSocket.TransparentProxy.Assign(IdSocksInfo);
     idHTTP1.IOHandler := Id_HandlerSocket;
     if (idHTTP1.Compressor = nil) or (not idHTTP1.Compressor.IsReady) then
       idHTTP1.Request.AcceptEncoding := 'identity'
@@ -131,6 +227,13 @@ begin
     IdHTTP1.Request.Username := FUser;
     FLastUnsuccessful := now;
     s := IdHTTP1.Get(url);
+    if IdHTTP1.CookieManager <> nil then
+    begin
+//      if IdHTTP1.CookieManager.CookieCollection.Count > 0 then
+//        raise Exception.Create(IdHTTP1.CookieManager.CookieCollection.Cookies[0].CookieText);
+//      raise Exception.Create('Crunch ' +
+//      inttostr(IdHTTP1.CookieManager.CookieCollection.Count));
+    end;
     FLastResponseCode := IdHTTP1.ResponseCode;
     if FLastResponseCode = 200 then
     begin
@@ -146,7 +249,9 @@ begin
       FLastResponse := 'Redirected: ' + s;
     end;
   finally
-
+    Id_HandlerSocket.TransparentProxy.DisposeOf;
+//    if IdSocksInfo <> nil then
+//      IdSocksInfo.Free;
     Id_HandlerSocket.Free;
     if Assigned(IdHTTP1.Compressor) then IdHTTP1.Compressor.Free;
     IdHTTP1.Free;
@@ -173,6 +278,12 @@ begin
   result := bs[FLastUserAgent];
 end;
 
+function TWebSite.getForum: string;
+begin
+  fetch('https://forum.' + SiteName + '/');
+  result := FLastResponse;
+end;
+
 function TWebSite.getTicker: string;
 begin
   fetch(WebSiteURL + 'ticker/');
@@ -182,6 +293,41 @@ end;
 procedure TWebSite.Refresh;
 begin
   fetch(FURL);
+end;
+
+procedure TWebSite.setTor(const Value: boolean);
+begin
+  FUseTor := false;
+  if Value  then
+    if (TORavailable <> '') then
+      FUseTor := true
+    else
+      raise Exception.Create('TOR browser not found');
+end;
+
+function TWebSite.TORavailable: string;
+var hWndTemp: hWnd;
+    iLenText: Integer;
+    cTitletemp: array [0..254] of Char;
+    sTitleTemp: string;
+    partialTitle: string;
+begin
+  result := '';
+  partialTitle := 'tor-browser';
+  partialTitle := UpperCase(partialTitle);
+  hWndTemp := FindWindow(nil, nil);
+  while hWndTemp <> 0 do
+  begin
+    iLenText := GetWindowText(hWndTemp, cTitletemp, 255);//search after the partial name
+    sTitleTemp := cTitletemp;
+    sTitleTemp := UpperCase(copy(sTitleTemp, 1, iLenText));
+    if pos(partialTitle, sTitleTemp ) <> 0 then
+    begin
+      result := copy(sTitleTemp, 1, iLenText);
+      Break;
+    end;
+    hWndTemp := GetWindow(hWndTemp, GW_HWNDNEXT);
+  end;
 end;
 
 procedure TWebSite.fillUseragents;
@@ -387,5 +533,25 @@ begin
   bs[174] := 'ia_archiver (+http://www.alexa.com/site/help/webmasters; crawler@alexa.com)';
 end;
 
+
+{ RLink }
+
+procedure RLink.clear;
+begin
+  FTarget := '';
+  FDescription := '';
+  FRawText := '';
+end;
+
+procedure RLink.setText(const Value: string);
+begin
+  if lowerCase(copy(Value, 1, 9)) <> '<a href="' then
+  begin
+    clear;
+    raise Exception.Create('String appears to be no valid link');
+  end;
+  FRawText := Value;
+
+end;
 
 end.
