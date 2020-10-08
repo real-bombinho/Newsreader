@@ -313,7 +313,7 @@ var hWndTemp: hWnd;
     partialTitle: string;
 begin
   result := '';
-  partialTitle := 'tor-browser';
+  partialTitle := 'obfs4proxy';
   partialTitle := UpperCase(partialTitle);
   hWndTemp := FindWindow(nil, nil);
   while hWndTemp <> 0 do
@@ -371,7 +371,10 @@ begin
   bs[28] := 'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0; FunWebProducts)';
   bs[29] := 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.1; SLCC1; .NET CLR 1.1.4322)';
   bs[30] := 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.0; Trident/4.0; InfoPath.1; SV1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 3.0.04506.30)';
-  bs[31] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727;' +    ' .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2; OfficeLiveConnector.1.3;' +    ' OfficeLivePatch.0.0; MS-RTC LM 8; Zune 4.0)';  bs[32] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; iCafeMedia; QQDownload 667; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2; .NET4.0C; .NET4.0E)';
+  bs[31] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727;' +
+    ' .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2; OfficeLiveConnector.1.3;' +
+    ' OfficeLivePatch.0.0; MS-RTC LM 8; Zune 4.0)';
+  bs[32] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; iCafeMedia; QQDownload 667; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.2; .NET4.0C; .NET4.0E)';
   bs[33] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; GTB7.4; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; AskTbFXTV5/5.15.4.23821)';
   bs[34] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; .NET CLR 3.5.30729)';
   bs[35] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; SV1; Alexa Toolbar)';
@@ -384,7 +387,10 @@ begin
   bs[41] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; SLCC1)';
   bs[42] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; QQDownload 590; SLCC1;' +
     ' .NET CLR 2.0.50727; InfoPath.2; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C)';
-  bs[43] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; Mozilla/4.0 (compatible; MSIE 6.0;' +    ' Windows NT 5.1; SV1) ; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.5.30729; InfoPath.2; .NET CLR 3.0.30729;' +    ' Zune 4.0; MS-RTC LM 8; MSN Optimized;US)';  bs[44] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; Mozilla/4.0 (compatible; MSIE 6.0;' +
+  bs[43] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; Mozilla/4.0 (compatible; MSIE 6.0;' +
+    ' Windows NT 5.1; SV1) ; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.5.30729; InfoPath.2; .NET CLR 3.0.30729;' +
+    ' Zune 4.0; MS-RTC LM 8; MSN Optimized;US)';
+  bs[44] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; Mozilla/4.0 (compatible; MSIE 6.0;' +
     ' Windows NT 5.1; SV1) )';
   bs[45] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; GTB7.4; InfoPath.1; SV1; .NET CLR 4.8.88265; WOW64; de)';
   bs[46] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; FBSMTWB; GTB6.3; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729)';
@@ -398,7 +404,10 @@ begin
     ' .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)';
   bs[52] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; GTB6.6; .NET CLR 2.0.50727; InfoPath.2;' +
     ' .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 1.1.4322; msn OptimizedIE8;ZHTW)';
-  bs[53] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; FunWebProductsp; GTB6;' +    ' .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0; MS-RTC LM 8; .NET CLR 2.0.50727;' +    ' .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; InfoPath.2; .NET CLR 3.0.45';  bs[54] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; chromeframe/20.0.1132.57;' +
+  bs[53] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; FunWebProductsp; GTB6;' +
+    ' .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0; MS-RTC LM 8; .NET CLR 2.0.50727;' +
+    ' .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; InfoPath.2; .NET CLR 3.0.45';
+  bs[54] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; chromeframe/20.0.1132.57;' +
     ' .NET CLR 1.0.3705; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)';
   bs[55] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; SV1; Alexa Toolbar)';
   bs[56] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; InfoPath.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)';
@@ -410,7 +419,10 @@ begin
     ' Media Center PC 5.0; InfoPath.2; .NET CLR 3.5.21022; .NET CLR 3.5.30729; .NET CLR 3.0.30618)';
   bs[61] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows 98; Win 9x 4.90; WOW64; Trident/4.0; SLCC2;' +
     ' .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; Tablet PC 2.0)';
-  bs[62] := 'Mozilla/4.0 (compatible; MSIE 8.0; ; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322;' +    ' .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729;' +    ' OfficeLiveConnector.1.4; OfficeLivePatch.1.3; .NET4.0C; .NET4.0E; InfoPat';  bs[63] := 'Mozilla/4.0 (compatible; MSIE 8.0; ; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727;' +
+  bs[62] := 'Mozilla/4.0 (compatible; MSIE 8.0; ; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322;' +
+    ' .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729;' +
+    ' OfficeLiveConnector.1.4; OfficeLivePatch.1.3; .NET4.0C; .NET4.0E; InfoPat';
+  bs[63] := 'Mozilla/4.0 (compatible; MSIE 8.0; ; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727;' +
     ' .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)';
   bs[64] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; InfoPath.2)';
   bs[65] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Win64; x64; Trident/4.0; .NET CLR 2.0.50727; SLCC2;' +
@@ -422,10 +434,16 @@ begin
   bs[68] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; Trident/4.0; (R1 1.6); SLCC1; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 3.5.30729; .NET CLR 3.0.30618)';
   bs[69] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2; Trident/4.0; SLCC1; .NET CLR 1.0.3705; .NET CLR 2.0.50727)';
   bs[70] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2; Trident/4.0)';
-  bs[71] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727;' +    ' .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; eSobiSubscriber 2.0.4.16; InfoPath.2;' +    ' OfficeLiveConnector.1.5; OfficeLivePatch.1.3)';  bs[72] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; SV1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)';
+  bs[71] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727;' +
+    ' .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; eSobiSubscriber 2.0.4.16; InfoPath.2;' +
+    ' OfficeLiveConnector.1.5; OfficeLivePatch.1.3)';
+  bs[72] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; SV1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)';
   bs[73] := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; Zune 4.7; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729) chromeframe/8.0.552.237';
   bs[74] := 'Mozilla/4.0 ( ; MSIE 8.0; Windows NT 6.0; Trident/4.0; GTB6.6; .NET CLR 3.5.30729)';
-  bs[75] := 'Mozilla/4.0 ( ; MSIE 7.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727;' +    ' .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729;' +    ' .NET CLR 3.0.30729; Media Center PC 6.0)';  bs[76] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)';
+  bs[75] := 'Mozilla/4.0 ( ; MSIE 7.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727;' +
+    ' .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729;' +
+    ' .NET CLR 3.0.30729; Media Center PC 6.0)';
+  bs[76] := 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)';
   bs[77] := 'Mozilla/4.0(compatible; MSIE 7.0b; Windows NT 6.0)';
   bs[78] := 'Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 6.0)';
   bs[79] := 'Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 5.2; .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 3.0.04506.30)';
